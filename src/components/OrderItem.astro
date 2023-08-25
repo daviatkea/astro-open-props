@@ -1,0 +1,153 @@
+---
+const { price, title, description, status, img } = Astro.props;
+
+import { Icon } from "astro-icon/components";
+
+import { Image } from "astro:assets";
+
+const images = import.meta.glob("../assets/images/*.jpg");
+
+const imageSource = images[`../assets/images/${img}`]();
+
+const isDelivered = status.includes("delivered");
+---
+
+<li>
+  <article class="item">
+    <div class="content">
+      <header>
+        <h2>{title}</h2>
+        <p><span>$</span>{price}</p>
+      </header>
+      <p class="desc">{description}</p>
+    </div>
+    <Image
+      src={imageSource}
+      width={400}
+      height={400}
+      alt={title}
+      format="webp"
+    />
+
+    <div class="status">
+      {
+        isDelivered ? (
+          <div>
+            <Icon name="solar:check-circle-bold" class="delivered" />
+            <p>Delivered</p>
+          </div>
+        ) : (
+          <div>
+            <Icon name="solar:delivery-bold" />
+            <p>Pending</p>
+          </div>
+        )
+      }
+      <a class="btn" href="#0">View product</a>
+    </div>
+  </article>
+</li>
+
+<style>
+  li {
+    container-type: inline-size;
+    outline: 1px solid var(--gray-4);
+  }
+
+  .item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--size-5);
+    padding: var(--size-5);
+    background: #fff;
+
+    .content {
+      flex: 1;
+    }
+
+    & header {
+      display: flex;
+      gap: var(--size-2);
+      flex-direction: column;
+      font-size: var(--font-size-1);
+
+      @container (width >= 400px) {
+        align-items: center;
+        flex-direction: row;
+        margin-bottom: var(--size-2);
+
+        & p {
+          margin-left: auto;
+        }
+      }
+
+      & h2 {
+        font-weight: var(--font-weight-6);
+      }
+
+      & p {
+        font-weight: var(--font-weight-6);
+        color: var(--gray-9);
+      }
+    }
+
+    .desc {
+      display: none;
+
+      @container (width >= 400px) {
+        display: block;
+      }
+    }
+
+    & img {
+      order: -1;
+      max-width: var(--size-10);
+      height: auto;
+      align-self: flex-start;
+
+      @container (width >= 600px) {
+        max-width: var(--size-12);
+      }
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      flex: 1 1 100%;
+      font-weight: var(--font-weight-5);
+
+      > div {
+        display: flex;
+        gap: var(--size-2);
+      }
+
+      svg {
+        inline-size: 24px;
+        block-size: 24px;
+      }
+
+      .delivered {
+        color: var(--green-6);
+      }
+
+      .btn {
+        padding: var(--size-2);
+        color: var(--blue-9);
+        text-decoration: none;
+        font-weight: var(--font-weight-5);
+        margin-left: auto;
+
+        &:focus-visible {
+          outline-color: var(--blue-9);
+        }
+
+        @container (width < 400px) {
+          margin-top: var(--size-2);
+          flex: 1 1 100%;
+          text-align: center;
+        }
+      }
+    }
+  }
+</style>
