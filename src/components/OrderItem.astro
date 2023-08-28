@@ -5,9 +5,29 @@ import { Icon } from "astro-icon/components";
 
 import { Image } from "astro:assets";
 
-const images = import.meta.glob("../assets/images/*.jpg");
+// import { importImage } from "../js/utils/imageImport";
 
-const imageSource = images[`../assets/images/${img}`]();
+// async function importImage(imgProp) {
+//   const images = import.meta.glob("../assets/images/*.{jpg,jpeg,png}");
+
+//   // const imageSource = images[`../assets/images/${img}`]();
+//   let imgSrc = null;
+//   for (const path in images) {
+//     if (path === `../assets/images/${imgProp}`) {
+//       const func: Function = images[path];
+//       imgSrc = (await func()).default;
+//       return imgSrc;
+//     }
+//   }
+//   return imgSrc;
+// }
+
+// const images = import.meta.glob("../assets/images/*.{jpg,jpeg,png}");
+// const src = await importImage(images, img);
+
+const images = import.meta.glob("../assets/images/*.{jpg,jpeg,png}");
+let imgSrc = null;
+imgSrc = images[`../assets/images/${img}`]();
 
 const isDelivered = status.includes("delivered");
 ---
@@ -21,13 +41,7 @@ const isDelivered = status.includes("delivered");
       </header>
       <p class="desc">{description}</p>
     </div>
-    <Image
-      src={imageSource}
-      width={400}
-      height={400}
-      alt={title}
-      format="webp"
-    />
+    <Image src={imgSrc} width={400} alt={title} format="webp" />
 
     <div class="status">
       {
